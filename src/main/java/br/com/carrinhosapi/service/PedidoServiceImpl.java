@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -35,6 +36,15 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Value("${url.items}")
+    private String urlItens;
+
+    @Value("${url.pagamento}")
+    private String urlPagamento;
+
+    @Value("${url.estoque")
+    private String urlEstoque;
 
     @Override
     public Pedido criarPedido(String userId, FormaPagamento formaPagamento) {
@@ -98,7 +108,7 @@ public class PedidoServiceImpl implements PedidoService {
 
     private Boolean verificarDisponibilidade(ItemPedido item) {
         ResponseEntity<String> response = restTemplate.getForEntity(
-                "http://localhost:8083/items/" + item.getProdutoId(),
+                urlItens + item.getProdutoId(),
                 String.class);
         if(response.getStatusCode() == HttpStatus.NOT_FOUND) {
             return false;
@@ -129,7 +139,7 @@ public class PedidoServiceImpl implements PedidoService {
         HttpEntity<String> entity = new HttpEntity<>(json.toString(), headers);
 
         ResponseEntity<String> response = restTemplate
-                .exchange("http://localhost:8085/pagamento", HttpMethod.POST, entity, String.class);
+                .exchange(urlPagamento, HttpMethod.POST, entity, String.class);
 
         if(response.getStatusCode() != HttpStatus.OK) {
             return null;
@@ -156,7 +166,7 @@ public class PedidoServiceImpl implements PedidoService {
         for(ItemPedido itemPedido : pedido.getItens()) {
             try {
                 ResponseEntity<String> response = restTemplate
-                        .exchange("http://localhost:8083/estoque/" + itemPedido.getProdutoId() + "/removerEstoque/" + itemPedido.getQuantidade(), HttpMethod.PUT, null, String.class);
+                        .exchange(urlEstoque + itemPedido.getProdutoId() + "/removerEstoque/" + itemPedido.getQuantidade(), HttpMethod.PUT, null, String.class);
 
                 if(response.getStatusCode() != HttpStatus.OK) {
                     throw new IOException("Erro ao remover estoque.");
