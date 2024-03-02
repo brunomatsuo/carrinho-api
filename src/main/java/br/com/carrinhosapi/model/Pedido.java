@@ -1,5 +1,6 @@
 package br.com.carrinhosapi.model;
 
+import br.com.carrinhosapi.enums.FormaPagamento;
 import br.com.carrinhosapi.enums.StatusPagamento;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,7 +22,8 @@ public class Pedido {
     private Integer id;
     private String usuarioId;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Item> itens;
+    private List<ItemPedido> itens;
     private BigDecimal valorTotal;
+    private FormaPagamento formaPagamento;
     private StatusPagamento statusPagamento;
 }

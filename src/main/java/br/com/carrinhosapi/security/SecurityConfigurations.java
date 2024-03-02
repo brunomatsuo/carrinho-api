@@ -2,6 +2,7 @@ package br.com.carrinhosapi.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,10 +20,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests()
-                //.antMatchers(HttpMethod.PUT, "/items/**").hasRole("ADMIN")
-                //.antMatchers(HttpMethod.POST, "/items/**").hasRole("ADMIN")
-                //.antMatchers(HttpMethod.DELETE, "/items/**").hasRole("ADMIN")
-                //.antMatchers(HttpMethod.GET, "/items/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/pedido").permitAll()
                 .antMatchers("/actuator/**").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement().disable()
