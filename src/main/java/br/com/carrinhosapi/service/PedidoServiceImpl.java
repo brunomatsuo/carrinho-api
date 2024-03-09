@@ -43,7 +43,7 @@ public class PedidoServiceImpl implements PedidoService {
     @Value("${url.pagamento}")
     private String urlPagamento;
 
-    @Value("${url.estoque")
+    @Value("${url.estoque}")
     private String urlEstoque;
 
     @Override
@@ -165,8 +165,9 @@ public class PedidoServiceImpl implements PedidoService {
 
         for(ItemPedido itemPedido : pedido.getItens()) {
             try {
+                String url = urlEstoque + itemPedido.getProdutoId() + "/removerEstoque/" + itemPedido.getQuantidade();
                 ResponseEntity<String> response = restTemplate
-                        .exchange(urlEstoque + itemPedido.getProdutoId() + "/removerEstoque/" + itemPedido.getQuantidade(), HttpMethod.PUT, null, String.class);
+                        .exchange(url, HttpMethod.PUT, null, String.class);
 
                 if(response.getStatusCode() != HttpStatus.OK) {
                     throw new IOException("Erro ao remover estoque.");
